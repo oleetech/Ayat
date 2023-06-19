@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django import forms
 from BusinessPartners.models import BusinessPartner 
 # Create your models here.
 
@@ -17,6 +18,9 @@ class SalesOrderInfo(models.Model):
 
     def __str__(self):
         return f"SalesOrderNo{self.OrderNumber}"
+
+
+
 
 class SalesOrderItem(models.Model):
     OrderNumber = models.ForeignKey(SalesOrderInfo, on_delete=models.CASCADE, null=True, default=None)
