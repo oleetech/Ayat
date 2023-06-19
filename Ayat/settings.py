@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'BusinessPartners',
     'ItemMasterData',
     'Sales',
+    'Production',
     
 
 ]
