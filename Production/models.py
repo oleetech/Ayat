@@ -87,7 +87,7 @@ admin.site.register(Production, ProductionAdmin)
 class ProductionReceipt(models.Model):
     ReceiptNumber = models.PositiveIntegerField(default=1, unique=True)
     OrderNumber = models.ForeignKey(SalesOrderInfo, on_delete=models.CASCADE, null=True, default=None)
-
+    TotalAmount = models.DecimalField(max_digits=10, decimal_places=4, null=True, blank=True,default=0)
     def __str__(self):
         return f"ReceiptNo{self.ReceiptNumber}"
 
@@ -102,6 +102,7 @@ class ProductionReceiptItem(models.Model):
     Quantity = models.PositiveIntegerField(default=0)
     Price = models.DecimalField(max_digits=10, decimal_places=4)
     PriceTotal = models.DecimalField(max_digits=10, decimal_places=4)
-
+    Size = models.CharField(max_length=50,default='')
+    Color = models.CharField(max_length=50,default='')
     def __str__(self):
         return f": {self.ReceiptNumber}"

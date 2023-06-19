@@ -29,10 +29,11 @@ from .models import ProductionReceipt, ProductionReceiptItem
 class ProductionReceiptForm(forms.ModelForm):
     ReceiptNumber = forms.IntegerField(disabled=True)
     OrderNumber = forms.ModelChoiceField(queryset=SalesOrderInfo.objects.all(), empty_label=None)
+    TotalAmount = forms.DecimalField(max_digits=10, decimal_places=4)
 
     class Meta:
         model = ProductionReceipt
-        fields = ['ReceiptNumber', 'OrderNumber']
+        fields = ['ReceiptNumber', 'TotalAmount','OrderNumber']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -51,7 +52,7 @@ class ProductionReceiptForm(forms.ModelForm):
 class ProductionReceiptItemInline(admin.TabularInline):
     model = ProductionReceiptItem
     extra = 1
-    fields = ('ProductionNo','ReceiptNumber',  'ItemName', 'Quantity', 'Price', 'PriceTotal')
+    fields = ('ProductionNo','ReceiptNumber', 'ItemName','Size', 'Color' ,'Quantity','Price', 'PriceTotal')
 
 class ProductionReceiptAdmin(admin.ModelAdmin):
     inlines = [ProductionReceiptItemInline]
