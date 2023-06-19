@@ -16,7 +16,7 @@ class SalesOrderInfo(models.Model):
 
 
     def __str__(self):
-        return f"SalesOrderInfo: {self.OrderNumber}"
+        return f"SalesOrderNo{self.OrderNumber}"
 
 class SalesOrderItem(models.Model):
     OrderNumber = models.ForeignKey(SalesOrderInfo, on_delete=models.CASCADE, null=True, default=None)
