@@ -3,7 +3,7 @@ from django import forms
 from django.contrib import admin
 from django.utils import timezone
 from django.forms import inlineformset_factory
-from Sales.models import SalesOrderInfo
+from Sales.models import SalesOrderInfo,SalesOrderItem
 
 # Create your models here.
 class BillOfMaterials(models.Model):
@@ -29,19 +29,10 @@ class Production(models.Model):
     due_date = models.DateField(default=timezone.now)
     docno = models.PositiveIntegerField(unique=True,default=1)
     
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if not self.docno:
-            last_docno = Production.objects.order_by('-id').values_list('docno', flat=True).first()
-            self.docno = last_docno + 1 if last_docno is not None else 1
 
-    def save(self, *args, **kwargs):
-        if not self.docno:
-            last_docno = Production.objects.order_by('-id').values_list('docno', flat=True).first()
-            self.docno = last_docno + 1 if last_docno is not None else 1
-        super().save(*args, **kwargs)
+        
     def __str__(self):
-        return self.name
+        return f"{self.docno}"
 
 class ProductionComponent(models.Model):
     production = models.ForeignKey(Production, on_delete=models.CASCADE, related_name='production_components')
@@ -55,15 +46,31 @@ class ProductionComponent(models.Model):
 
 class ProductionComponentInline(admin.TabularInline):
     model = ProductionComponent
-
+    extra = 1  # Set the desired value for the 'extra' attribute
 class ProductionForm(forms.ModelForm):
+    docno = forms.IntegerField(disabled=True)  # Add this line to the form
+    
     class Meta:
         model = Production
         fields = ['name', 'quantity', 'sales_order_no', 'docno']
         widgets = {
             'docno': forms.TextInput(attrs={'readonly': 'readonly'}),
         }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        if not self.instance.pk:
+            # Get the last inserted docno
+            last_docno = Production.objects.order_by('-docno').first()
+            if last_docno:
+                next_docno = last_docno.docno + 1
+            else:
+                next_docno = 1
 
+            self.initial['docno'] = next_docno
+            
+            
+            
 class ProductionAdmin(admin.ModelAdmin):
     form = ProductionForm
     inlines = [ProductionComponentInline]
@@ -72,3 +79,29 @@ class ProductionAdmin(admin.ModelAdmin):
         defer = True  # Add the defer attribute
 
 admin.site.register(Production, ProductionAdmin)
+
+
+
+
+
+class ProductionReceipt(models.Model):
+    ReceiptNumber = models.PositiveIntegerField(default=1, unique=True)
+    OrderNumber = models.ForeignKey(SalesOrderInfo, on_delete=models.CASCADE, null=True, default=None)
+
+    def __str__(self):
+        return f"ReceiptNo{self.ReceiptNumber}"
+
+
+            
+            
+class ProductionReceiptItem(models.Model):
+    ReceiptNumber = models.ForeignKey(ProductionReceipt, on_delete=models.CASCADE, null=True, default=None)
+    SalesOrderItem = models.ForeignKey(SalesOrderItem, on_delete=models.CASCADE, null=True, default=None)
+    ProductionNo = models.ForeignKey(Production, on_delete=models.CASCADE, related_name='production_receipt_components', null=True)
+    ItemName = models.CharField(max_length=50)
+    Quantity = models.PositiveIntegerField(default=0)
+    Price = models.DecimalField(max_digits=10, decimal_places=4)
+    PriceTotal = models.DecimalField(max_digits=10, decimal_places=4)
+
+    def __str__(self):
+        return f": {self.ReceiptNumber}"
