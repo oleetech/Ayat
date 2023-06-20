@@ -6,6 +6,16 @@ from django.forms import inlineformset_factory
 from Sales.models import SalesOrderInfo,SalesOrderItem
 
 # Create your models here.
+
+'''
+  ____    _   _   _      ___     __     __  __           _                   _           _       
+ | __ )  (_) | | | |    / _ \   / _|   |  \/  |   __ _  | |_    ___   _ __  (_)   __ _  | |  ___ 
+ |  _ \  | | | | | |   | | | | | |_    | |\/| |  / _` | | __|  / _ \ | '__| | |  / _` | | | / __|
+ | |_) | | | | | | |   | |_| | |  _|   | |  | | | (_| | | |_  |  __/ | |    | | | (_| | | | \__ \
+ |____/  |_| |_| |_|    \___/  |_|     |_|  |_|  \__,_|  \__|  \___| |_|    |_|  \__,_| |_| |___/
+                                                                                                 
+
+'''
 class BillOfMaterials(models.Model):
     code = models.CharField(max_length=20)
     name = models.CharField(max_length=100)
@@ -19,6 +29,15 @@ class ChildComponent(models.Model):
     uom = models.CharField(max_length=20)
     quantity = models.DecimalField(max_digits=10, decimal_places=4)
 
+
+'''
+  ____                       _                  _     _                      ___               _               
+ |  _ \   _ __    ___     __| |  _   _    ___  | |_  (_)   ___    _ __      / _ \   _ __    __| |   ___   _ __ 
+ | |_) | | '__|  / _ \   / _` | | | | |  / __| | __| | |  / _ \  | '_ \    | | | | | '__|  / _` |  / _ \ | '__|
+ |  __/  | |    | (_) | | (_| | | |_| | | (__  | |_  | | | (_) | | | | |   | |_| | | |    | (_| | |  __/ | |   
+ |_|     |_|     \___/   \__,_|  \__,_|  \___|  \__| |_|  \___/  |_| |_|    \___/  |_|     \__,_|  \___| |_|   
+                                                                                                               
+'''
 class Production(models.Model):
     name = models.CharField(max_length=100)
     quantity = models.DecimalField(max_digits=10, decimal_places=4)
@@ -44,45 +63,17 @@ class ProductionComponent(models.Model):
     def __str__(self):
         return self.name   
 
-class ProductionComponentInline(admin.TabularInline):
-    model = ProductionComponent
-    extra = 1  # Set the desired value for the 'extra' attribute
-class ProductionForm(forms.ModelForm):
-    docno = forms.IntegerField(disabled=True)  # Add this line to the form
-    
-    class Meta:
-        model = Production
-        fields = ['name', 'quantity', 'sales_order_no', 'docno']
-        widgets = {
-            'docno': forms.TextInput(attrs={'readonly': 'readonly'}),
-        }
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        
-        if not self.instance.pk:
-            # Get the last inserted docno
-            last_docno = Production.objects.order_by('-docno').first()
-            if last_docno:
-                next_docno = last_docno.docno + 1
-            else:
-                next_docno = 1
-
-            self.initial['docno'] = next_docno
-            
-            
-            
-class ProductionAdmin(admin.ModelAdmin):
-    form = ProductionForm
-    inlines = [ProductionComponentInline]
-    class Media:
-        js = ('js/fetch_sales_order_info.js',)
-        defer = True  # Add the defer attribute
-
-admin.site.register(Production, ProductionAdmin)
 
 
 
-
+'''
+  ____                         _           _       _____                                ____                       _                  _     _                 
+ |  _ \    ___    ___    ___  (_)  _ __   | |_    |  ___|  _ __    ___    _ __ ___     |  _ \   _ __    ___     __| |  _   _    ___  | |_  (_)   ___    _ __  
+ | |_) |  / _ \  / __|  / _ \ | | | '_ \  | __|   | |_    | '__|  / _ \  | '_ ` _ \    | |_) | | '__|  / _ \   / _` | | | | |  / __| | __| | |  / _ \  | '_ \ 
+ |  _ <  |  __/ | (__  |  __/ | | | |_) | | |_    |  _|   | |    | (_) | | | | | | |   |  __/  | |    | (_) | | (_| | | |_| | | (__  | |_  | | | (_) | | | | |
+ |_| \_\  \___|  \___|  \___| |_| | .__/   \__|   |_|     |_|     \___/  |_| |_| |_|   |_|     |_|     \___/   \__,_|  \__,_|  \___|  \__| |_|  \___/  |_| |_|
+                                  |_|                                                                                                                         
+'''
 
 class ProductionReceipt(models.Model):
     ReceiptNumber = models.PositiveIntegerField(default=1, unique=True)
