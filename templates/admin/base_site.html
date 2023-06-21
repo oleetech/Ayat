@@ -1,0 +1,25 @@
+
+{% extends "admin/base.html" %}
+{% load static %}
+
+
+{% block title %}Ayat{% endblock %}
+
+{% block branding %}
+    <h1 id="site-name" style="font-size: xx-large; font-weight: bold;">Ayat</h1>
+{% endblock %}
+
+
+{% block extrastyle %}
+    {{ block.super }}
+    <script src="{% static 'js/custom.js' %}"></script>
+
+    <style>
+        #header {
+            background-image: url('{% static "images/ayat.png" %}');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: contain;
+        }
+    </style>
+{% endblock %}
