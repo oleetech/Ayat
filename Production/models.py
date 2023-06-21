@@ -63,7 +63,30 @@ class ProductionComponent(models.Model):
     def __str__(self):
         return self.name   
 
+    # Define a method to create formset instances from form data
+    @classmethod
+    def create_from_formset(cls, formset_data):
+        components = []
+        for data in formset_data:
+            component = cls(
+                code=data['code'],
+                name=data['name'],
+                uom=data['uom'],
+                quantity=data['quantity']
+            )
+            components.append(component)
+        return cls.objects.bulk_create(components)
 
+
+    # Update your view function to handle multiple formsets
+    def save_production_components(request):
+        if request.method == 'POST':
+            formset_data = request.POST.getlist('formset_data[]')
+            components = ProductionComponent.create_from_formset(formset_data)
+            # Process or perform any additional operations on the saved components
+            return HttpResponse('Formsets saved successfully')
+        else:
+            return HttpResponseBadRequest('Invalid request method')
 
 
 '''
