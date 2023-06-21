@@ -21,6 +21,8 @@ class SalesOrderInfo(models.Model):
     Address = models.CharField(max_length=50)
     Created = models.DateTimeField(default=timezone.now)
     TotalAmount = models.DecimalField(max_digits=10, decimal_places=4, null=True, blank=True,default=0)
+    TotalQty = models.DecimalField(max_digits=10, decimal_places=4, null=True, blank=True, default=0)
+
 
 
     def __str__(self):
@@ -56,7 +58,14 @@ class DeliveryInfo(models.Model):
     Created = models.DateTimeField(default=timezone.now)
     DocNo = models.PositiveIntegerField(unique=True,default=1)
     TotalAmount = models.DecimalField(max_digits=10, decimal_places=4, null=True, blank=True,default=0)
-   
+    TotalQty = models.DecimalField(max_digits=10, decimal_places=4, null=True, blank=True, default=0)
+
+
+
+    def __str__(self):
+        return f"Delivery for SalesOrderNo {self.DocNo}"
+
+
     def __str__(self):
         return f"Delivery for SalesOrderNo {self.DocNo}"
 

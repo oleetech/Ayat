@@ -34,12 +34,34 @@
       $('#id_TotalAmount').val(totalAmount);
     }
 
+
+
+// Example: Set the TotalQty value
+function setTotalQty() {
+  var totalQty = calculateTotalQty();
+  $('#id_TotalQty').val(totalQty);
+}
+
+function calculateTotalQty() {
+  var total = 0;
+  $('input[name^="salesorderitem_set-"][name$="-Quantity"]').each(function() {
+    var quantity = parseFloat($(this).val());
+    if (!isNaN(quantity)) {
+      total += quantity;
+    }
+  });
+  return total.toFixed(4);
+}
+
+
+
     // Example: Handle changes in Price and Quantity fields
     function handleFieldChanges() {
       $('input[name^="salesorderitem_set-"][name$="-Price"], input[name^="salesorderitem_set-"][name$="-Quantity"]').on('change', function() {
         var index = $(this).attr('name').split('-')[1];
         calculatePriceTotal(index);
         setTotalAmount();
+        setTotalQty();
       });
     }
 
