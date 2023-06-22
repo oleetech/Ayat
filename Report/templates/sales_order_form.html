@@ -1,0 +1,7 @@
+<!-- sales_order_form.html -->
+<form method="post" action="{% url 'sales_order_form' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+  </form>
+  
