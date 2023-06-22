@@ -13,8 +13,8 @@ def sales_order_list(request):
             start_date = form.cleaned_data['start_date']
             end_date = form.cleaned_data['end_date']
             
-sales_orders = SalesOrderInfo.objects.filter(Created__range=[start_date, end_date]).values('OrderNumber', 'CustomerName__name', 'Address')
-            sales_order_items = SalesOrderItem.objects.filter(OrderNumber__in=sales_orders).values('OrderNumber__OrderNumber', 'ItemCode', 'ItemName', 'Quantity', 'Price', 'PriceTotal')
+            sales_orders = SalesOrderInfo.objects.filter(Created__range=[start_date, end_date])
+            sales_order_items = SalesOrderItem.objects.filter(OrderNumber__in=sales_orders)
             
             return render(request, 'sales_order_list.html', {'sales_orders': sales_orders, 'sales_order_items': sales_order_items})
     else:
