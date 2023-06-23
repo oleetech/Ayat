@@ -55,11 +55,12 @@ def item_search_form(request):
                 warehouses = Warehouse.objects.all()
                 item_quantities = []
                 for warehouse in warehouses:
+                   
                     stock_quantity = Stock.objects.filter(warehouse=warehouse, item=item).aggregate(Sum('quantity'))['quantity__sum'] or 0
                     receipt_quantity = ItemReceipt.objects.filter(warehouse=warehouse, item=item).aggregate(Sum('quantity'))['quantity__sum'] or 0
                     delivery_quantity = ItemDelivery.objects.filter(warehouse=warehouse, item=item).aggregate(Sum('quantity'))['quantity__sum'] or 0
 
-                    total_quantity = stock_quantity + receipt_quantity - delivery_quantity
+                    total_quantity =  stock_quantity + receipt_quantity - delivery_quantity
 
                     item_quantities.append({
                         'warehouse': warehouse,

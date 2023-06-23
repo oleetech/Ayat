@@ -3,7 +3,7 @@ from django.db import models
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from GeneralSettings.models import Unit
-
+from django.db.models import Q,Sum
 # Create your models here.
 class Warehouse(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -17,13 +17,18 @@ class Warehouse(models.Model):
 class Item(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
-    quantity = models.PositiveIntegerField()
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, default=1)
     unit = models.ForeignKey(Unit, on_delete=models.SET_DEFAULT, default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     # Add any other fields you need
+    @property
+    def inhand(self):
+        stock_quantity = self.stock_set.aggregate(total_quantity=Sum('quantity'))['total_quantity'] or 0
+        receipt_quantity = self.itemreceipt_set.aggregate(total_quantity=Sum('quantity'))['total_quantity'] or 0
+        delivery_quantity = self.itemdelivery_set.aggregate(total_quantity=Sum('quantity'))['total_quantity'] or 0
 
+        return  stock_quantity + receipt_quantity - delivery_quantity
     def __str__(self):
         return self.name
 
@@ -35,7 +40,6 @@ class Stock(models.Model):
 
 
 class ItemReceiptinfo(models.Model):
-    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
     docno = models.PositiveIntegerField(default=1, unique=True)
     created = models.DateTimeField(default=timezone.now)
 
@@ -58,7 +62,6 @@ class ItemReceipt(models.Model):
 
 
 class ItemDeliveryinfo(models.Model):
-    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
     docno = models.PositiveIntegerField(default=1, unique=True)
     created = models.DateTimeField(default=timezone.now)
 
