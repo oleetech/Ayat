@@ -4,10 +4,100 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <style>
+        /* Colors */
+        :root {
+            --gray: #888;
+            --gray-light: #e0e0e0;
+            --gray-lighter: #f5f5f5;
+            --gray-lightest: #fafafa;
+            --gray-dark: #444;
+            --gray-darker: #222;
+            --gray-darkest: #111;
+            --primary-color: #0d5cab;
+            --primary-color-inverse: white;
+            --secondary-color: #72c267;
+            --secondary-color-inverse: white;
+            --tertiary-color: #168dde;
+            --tertiary-color-inverse: white;
+        }
+
+        /* Layout */
+        html {
+            font-size: 16px;
+        }
+        
+        body {
+            margin: 1rem;
+        }
+
+        /* Number Circle List */
+        .number-circle-list {
+            list-style: none;
+            padding-left: 1rem;
+            counter-reset: circle-counter;
+        }
+
+        .number-circle-list li {
+            counter-increment: circle-counter;
+            margin-bottom: 0.25rem;
+        }
+
+        .number-circle-list li:before {
+            content: counter(circle-counter);
+            background-color: var(--gray-lightest);
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            display: inline-block;
+            font-size: 0.75rem;
+            line-height: 1.5rem;
+            color: var(--gray-dark);
+            text-align: center;
+            margin-right: 0.5rem;
+            position: relative;
+            top: -2px;
+        }
+
+        /* Color Variants */
+        .number-circle-list--primary-color li:before {
+            background-color: var(--primary-color);
+            color: var(--primary-color-inverse);
+        }
+
+        .number-circle-list--secondary-color li:before {
+            background-color: var(--secondary-color);
+            color: var(--secondary-color-inverse);
+        }
+
+        .number-circle-list--tertiary-color li:before {
+            background-color: var(--tertiary-color);
+            color: var(--tertiary-color-inverse);
+        }
+    </style>
 </head>
 <body>
-    <a href="{% url 'sales_order_list_by_date' %}">Sales Order List by Date</a>
-    <a href="{% url 'sales_order_list_by_orderno' %}">Sales Order List by Order Number</a>
 
+
+
+    <div class="band band--white">
+        <div class="inner band--inner">
+            <div class="row">
+                <div class="col">
+                    <h2>Sales Order</h2>
+                  
+                    <ul class="number-circle-list number-circle-list--primary-color">
+                        <li><a href="{% url 'sales_order_list_by_date' %}">Sales Order List by Date</a></li>
+                        <li><a href="{% url 'sales_order_list_by_orderno' %}">Sales Order List by Order Number</a></li>
+
+                    </ul>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
 </body>
 </html>
