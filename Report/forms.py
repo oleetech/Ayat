@@ -6,7 +6,18 @@ class SalesOrderForm(forms.Form):
 
 class SalesOrderNumberForm(forms.Form):
     order_number = forms.IntegerField(label='Order Number')
+    class Meta:
+        fields = ['order_number']    
+    def __init__(self, *args, **kwargs):
+        super(SalesOrderNumberForm, self).__init__(*args, **kwargs)
 
+
+     
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({
+                'class': 'form-control',
+                'id': f"defaultForm-{field_name}",
+            })  
 
 class ItemForm(forms.ModelForm):
     name = forms.CharField(widget=forms.TextInput)

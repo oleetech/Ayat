@@ -1,0 +1,14 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+{% for item in results %}
+  <h3>{{ item.name }}</h3>
+  <p>{{ item.description }}</p>
+  <a href="{% url 'item_detail' item.pk %}">View</a>
+  <!-- Display other fields as necessary -->
+{% empty %}
+  <p>No results found.</p>
+{% endfor %}
+
+{%endblock  %}

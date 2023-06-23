@@ -1,26 +1,59 @@
-<h2>{{ item.name }}</h2>
 
+{% extends 'base.html' %}
 
-<form>
+{% block content %}
 
-    {% csrf_token %}
-    {{ form.as_p }}
+<div class="card">
+  <div class="card-header">Item Information</div>
+  <div class="card-body">
+    <form>
 
-  </form>
-
-  <table class="table table-bordered border-primary">
-    <thead>
-      <tr>
-        <th>Warehouse</th>
-        <th>Quantity</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item_quantity in item_quantities %}
-        <tr>
-          <td>{{ item_quantity.warehouse.name }}</td>
-          <td>{{ item_quantity.quantity }}</td>
-        </tr>
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="col-md-4 mb-4">
+        <div class="form-group">
+   
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fas fa-envelope">{{ field.label }}</i>
+              </span>
+            </div>
+            {{ field }}
+          </div>
+        </div>
+      </div>
       {% endfor %}
-    </tbody>
-  </table>
+  
+    </form>
+  </div> 
+</div>
+
+
+
+<div class="card">
+  <div class="card-header">Item Stock Information</div>
+  <div class="card-body">
+    <table class="table table-bordered border-primary">
+      <thead>
+        <tr>
+          <th>Warehouse</th>
+          <th>Quantity</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item_quantity in item_quantities %}
+          <tr>
+            <td>{{ item_quantity.warehouse.name }}</td>
+            <td>{{ item_quantity.quantity }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div> 
+
+</div>
+
+
+
+  {%endblock  %}
