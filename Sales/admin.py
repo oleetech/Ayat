@@ -50,6 +50,7 @@ class DeliveryInfoAdminForm(forms.ModelForm):
         fields = ['SalesOrder', 'CustomerName', 'Address', 'DocNo', 'TotalAmount','TotalQty']
         widgets = {
             'DocNo': forms.TextInput(attrs={'readonly': 'readonly'}),
+              
         }
 
     def __init__(self, *args, **kwargs):

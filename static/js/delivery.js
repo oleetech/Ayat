@@ -65,3 +65,91 @@ function calculateTotalQty() {
     });
   })(jQuery);
   
+
+
+  (function($) {
+    $(document).ready(function() {
+      // Show alert on #id_CustomerName change
+      $('#id_SalesOrder').on('change', function() {
+        var orderno = $(this).val();
+      
+  
+  
+        if (orderno !== '') {
+          $.ajax({
+            type: "POST",
+            url: "/sales/orderinfo/",
+            data: {'orderno': orderno},
+            dataType: "json",
+            success: function (response) {
+              $('#id_Address').val(response.Address);
+
+
+    
+            },
+            error: function(xhr, textStatus, errorThrown) {
+              console.log('Error:', errorThrown);
+            }
+          });
+        }
+      });
+    });
+  })(jQuery);
+
+
+  (function($) {
+    $(document).ready(function() {
+      // Show alert on #id_CustomerName change
+      $('#id_CustomerName').on('change', function() {
+        var customername = $(this).val();
+  
+  
+        if (customername !== '') {
+          $.ajax({
+            type: "POST",
+            url: "/businesspartners/businespartnername/",
+            data: {'customername': customername},
+            dataType: "json",
+            success: function (response) {
+              $('#id_Address').val(response.address);
+            },
+            error: function(xhr, textStatus, errorThrown) {
+              console.log('Error:', errorThrown);
+            }
+          });
+        }
+      });
+    });
+  })(jQuery);
+  
+  (function($) {
+    $(document).ready(function() {
+      // Add change event handler for each item code input field
+      $('input[id^="id_deliveryitem_set-"][id$="-ItemCode"]').on('change', function() {
+        var itemCodeId = $(this).attr('id');
+        var prefix = itemCodeId.split('-')[1];
+  
+        var itemCode = $(this).val();
+        if (itemCode !== '') {
+          $.ajax({
+            type: "POST",
+            url: "/itemmasterdata/item/",
+            data: {
+              'prefix': prefix,
+              'code': itemCode
+            },
+            dataType: "json",
+            success: function(response) {
+              // Handle the response data
+              var itemNameInputId = '#id_deliveryitem_set-' + prefix + '-ItemName';
+              $(itemNameInputId).val(response.name);
+            },
+            error: function(xhr, textStatus, errorThrown) {
+              console.log('Error:', errorThrown);
+            }
+          });
+        }
+      });
+    });
+  })(jQuery);
+  

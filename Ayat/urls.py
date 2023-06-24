@@ -23,6 +23,8 @@ urlpatterns = [
     path('production/',include('Production.urls')),
     path('report/',include('Report.urls') ),
     path('businesspartners/',include('BusinessPartners.urls')),
+    path('itemmasterdata/',include('ItemMasterData.urls')),  
+    path('sales/',include('Sales.urls')),    
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
