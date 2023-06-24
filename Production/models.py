@@ -2,6 +2,8 @@ from django.db import models
 from django import forms
 from django.contrib import admin
 from django.utils import timezone
+from datetime import date
+
 from django.forms import inlineformset_factory
 from Sales.models import SalesOrderInfo,SalesOrderItem
 
@@ -19,7 +21,6 @@ from Sales.models import SalesOrderInfo,SalesOrderItem
 class BillOfMaterials(models.Model):
     code = models.CharField(max_length=20)
     name = models.CharField(max_length=100)
-    bomtype = models.CharField(max_length=20)
     quantity = models.DecimalField(max_digits=10, decimal_places=4)
 
 class ChildComponent(models.Model):
@@ -43,10 +44,10 @@ class Production(models.Model):
     name = models.CharField(max_length=100)
     quantity = models.DecimalField(max_digits=10, decimal_places=4)
     sales_order_no = models.ForeignKey(SalesOrderInfo,on_delete=models.CASCADE,related_name='sales_production_order',default=1)
-    created_date = models.DateTimeField(default=timezone.now)
-    order_date = models.DateField(default=timezone.now)
-    start_date = models.DateField(default=timezone.now)
-    due_date = models.DateField(default=timezone.now)
+    created_date = models.DateField(default=date.today)
+    order_date = models.DateField(default=date.today)
+    start_date = models.DateField(default=date.today)
+    due_date = models.DateField(default=date.today)
     docno = models.PositiveIntegerField(unique=True,default=1)
     
 
@@ -82,7 +83,7 @@ class ProductionReceipt(models.Model):
     ReceiptNumber = models.PositiveIntegerField(default=1, unique=True)
     TotalAmount = models.DecimalField(max_digits=10, decimal_places=4, null=True, blank=True,default=0)
     TotalQty = models.DecimalField(max_digits=10, decimal_places=4, null=True, blank=True,default=0)  
-
+    created_date = models.DateField(default=date.today)
     def __str__(self):
         return f"ReceiptNo{self.ReceiptNumber}"
 

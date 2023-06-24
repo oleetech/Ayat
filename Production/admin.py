@@ -26,6 +26,7 @@ ChildComponentFormSet = inlineformset_factory(
     extra=1,
 )
 
+
 class BillOfMaterialsAdmin(admin.ModelAdmin):
     inlines = [ChildComponentInline]
 
@@ -75,7 +76,7 @@ class ProductionAdmin(admin.ModelAdmin):
     form = ProductionForm
     inlines = [ProductionComponentInline]
     class Media:
-        js = ('js/fetch_sales_order_info.js',)
+        js = ('js/productionorder.js',)
         defer = True  # Add the defer attribute
 
 admin.site.register(Production, ProductionAdmin)

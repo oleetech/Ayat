@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils import timezone
+from datetime import date
+
 from django import forms
 from BusinessPartners.models import BusinessPartner 
 # Create your models here.
@@ -19,7 +21,7 @@ class SalesOrderInfo(models.Model):
     OrderNumber = models.PositiveIntegerField(default=1, unique=True)
     CustomerName = models.ForeignKey(BusinessPartner, on_delete=models.CASCADE, null=True, default=None)
     Address = models.CharField(max_length=50)
-    Created = models.DateTimeField(default=timezone.now)
+    Created = models.DateField(default=date.today)
     TotalAmount = models.DecimalField(max_digits=10, decimal_places=4, null=True, blank=True,default=0)
     TotalQty = models.DecimalField(max_digits=10, decimal_places=4, null=True, blank=True, default=0)
 
@@ -55,7 +57,7 @@ class DeliveryInfo(models.Model):
     SalesOrder = models.PositiveIntegerField(primary_key=True)
     CustomerName = models.ForeignKey(BusinessPartner, on_delete=models.CASCADE, null=True, default=None)
     Address = models.CharField(max_length=50)
-    Created = models.DateTimeField(default=timezone.now)
+    Created = models.DateField(default=date.today)
     DocNo = models.PositiveIntegerField(unique=True,default=1)
     TotalAmount = models.DecimalField(max_digits=10, decimal_places=4, null=True, blank=True,default=0)
     TotalQty = models.DecimalField(max_digits=10, decimal_places=4, null=True, blank=True, default=0)

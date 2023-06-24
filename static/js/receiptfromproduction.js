@@ -38,14 +38,34 @@
           var index = $(this).attr('name').split('-')[1];
           calculatePriceTotal(index);
           setTotalAmount();
+          setTotalQty();
         });
       }
   
+       // Example: Set the TotalQty value
+function setTotalQty() {
+  var totalQty = calculateTotalQty();
+  $('#id_TotalQty').val(totalQty);
+}
+
+function calculateTotalQty() {
+  var total = 0;
+  $('input[name^="productionreceiptitem_set-"][name$="-Quantity"]').each(function() {
+    var quantity = parseFloat($(this).val());
+    if (!isNaN(quantity)) {
+      total += quantity;
+    }
+  });
+  return total.toFixed(4);
+} 
+
+
       // Call the function to handle field changes
       handleFieldChanges();
     });
   })(jQuery);
   
+
 
   (function($) {
     $(document).ready(function() {
@@ -66,6 +86,8 @@
             $("#id_productionreceiptitem_set-" + rowId + "-ItemCode").val(response.code);
             $("#id_productionreceiptitem_set-" + rowId + "-ItemName").val(response.name);
             $("#id_productionreceiptitem_set-" + rowId + "-Quantity").val(response.quantity);
+
+
           },
           error: function(xhr, textStatus, errorThrown) {
             console.log('Error:', errorThrown);
@@ -81,6 +103,7 @@
   
         // Call the handleProductionNoChange function
         handleProductionNoChange(rowId);
+        
       });
   
     });

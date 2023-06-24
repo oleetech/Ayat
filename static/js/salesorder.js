@@ -1,6 +1,5 @@
 (function($) {
   $(document).ready(function() {
-    // Your code here
 
     // Example: Changing IDs with prefix
     var prefix = '#id_salesorderitem_set-';
@@ -34,26 +33,23 @@
       $('#id_TotalAmount').val(totalAmount);
     }
 
-
-
-// Example: Set the TotalQty value
-function setTotalQty() {
-  var totalQty = calculateTotalQty();
-  $('#id_TotalQty').val(totalQty);
-}
-
-function calculateTotalQty() {
-  var total = 0;
-  $('input[name^="salesorderitem_set-"][name$="-Quantity"]').each(function() {
-    var quantity = parseFloat($(this).val());
-    if (!isNaN(quantity)) {
-      total += quantity;
+    // Example: Calculate the sum of all Quantity values
+    function calculateTotalQty() {
+      var total = 0;
+      $('input[name^="salesorderitem_set-"][name$="-Quantity"]').each(function() {
+        var quantity = parseFloat($(this).val());
+        if (!isNaN(quantity)) {
+          total += quantity;
+        }
+      });
+      return total.toFixed(4);
     }
-  });
-  return total.toFixed(4);
-}
 
-
+    // Example: Set the TotalQty value
+    function setTotalQty() {
+      var totalQty = calculateTotalQty();
+      $('#id_TotalQty').val(totalQty);
+    }
 
     // Example: Handle changes in Price and Quantity fields
     function handleFieldChanges() {
@@ -68,5 +64,36 @@ function calculateTotalQty() {
     // Call the function to handle field changes
     handleFieldChanges();
 
+
+    
+
+  });
+
+
+
+})(jQuery);
+
+
+
+(function($) {
+  $(document).ready(function() {
+    // Show alert on #id_CustomerName change
+    $('#id_CustomerName').on('change', function() {
+      var customername = $(this).val();
+      if (customername !== '') {
+        $.ajax({
+          type: "POST",
+          url: "/businesspartners/businespartnername/",
+          data: {'customername': customername},
+          dataType: "json",
+          success: function (response) {
+            $('#id_Address').val(response.address);
+          },
+          error: function(xhr, textStatus, errorThrown) {
+            console.log('Error:', errorThrown);
+          }
+        });
+      }
+    });
   });
 })(jQuery);
