@@ -46,3 +46,44 @@
     });
   })(jQuery);
   
+
+  (function($) {
+    $(document).ready(function() {
+  
+      // Function to handle the change event
+      function handleProductionNoChange(rowId) {
+        var productionNo = $('#id_productionreceiptitem_set-' + rowId + '-ProductionNo').val();
+  
+        // Send AJAX request to the server
+        $.ajax({
+          url: '/production/receipt_production_productionno/productionno/',
+          type: 'POST',
+          data: {
+            'ProductionNo': productionNo
+          },
+          dataType: 'json',
+          success: function(response) {
+            $("#id_productionreceiptitem_set-" + rowId + "-ItemCode").val(response.code);
+            $("#id_productionreceiptitem_set-" + rowId + "-ItemName").val(response.name);
+            $("#id_productionreceiptitem_set-" + rowId + "-Quantity").val(response.quantity);
+          },
+          error: function(xhr, textStatus, errorThrown) {
+            console.log('Error:', errorThrown);
+          }
+        });
+      }    
+  
+      // Event handler for ProductionNo change events
+      $(document).on('change', '.dynamic-productionreceiptitem_set select[id^="id_productionreceiptitem_set-"][id$="-ProductionNo"]', function() {
+        // Get the row ID from the select element's ID
+        var selectId = $(this).attr('id');
+        var rowId = selectId.match(/\d+/)[0];
+  
+        // Call the handleProductionNoChange function
+        handleProductionNoChange(rowId);
+      });
+  
+    });
+  })(jQuery);
+  
+  

@@ -15,6 +15,7 @@ class Warehouse(models.Model):
 
 
 class Item(models.Model):
+    code = models.CharField(max_length=25, unique=True,default='')
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, default=1)

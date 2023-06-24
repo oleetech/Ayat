@@ -1,8 +1,9 @@
 from django.urls import path
-from .views import ajax_view
+from . import views
 
 urlpatterns = [
 
-    path('ajax/', ajax_view, name='ajax_view'),
+    path('ajax/', views.ajax_view, name='ajax_view'),
+    path('receipt_production_productionno/productionno/', views.receipt_production_productionno, name='receipt_production_productionno'),
 
 ]

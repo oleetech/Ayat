@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 from django.forms import inlineformset_factory
-
+from ItemMasterData.models import Item
 from django.contrib.admin import widgets
 from Sales.models import SalesOrderInfo,SalesOrderItem
 
@@ -47,15 +47,17 @@ class ProductionComponentInline(admin.TabularInline):
     extra = 1  # Set the desired value for the 'extra' attribute
 class ProductionForm(forms.ModelForm):
     docno = forms.IntegerField(disabled=True)  # Add this line to the form
+    code = forms.ChoiceField(choices=[])
     
     class Meta:
         model = Production
-        fields = ['name', 'quantity', 'sales_order_no', 'docno']
+        fields = ['code','name', 'quantity', 'sales_order_no', 'docno']
         widgets = {
             'docno': forms.TextInput(attrs={'readonly': 'readonly'}),
         }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['code'].choices = [(item.code, item.code) for item in Item.objects.all()]
         
         if not self.instance.pk:
             # Get the last inserted docno
@@ -90,12 +92,12 @@ from .models import ProductionReceipt, ProductionReceiptItem
             
 class ProductionReceiptForm(forms.ModelForm):
     ReceiptNumber = forms.IntegerField(disabled=True)
-    OrderNumber = forms.ModelChoiceField(queryset=SalesOrderInfo.objects.all(), empty_label=None)
+    TotalQty = forms.DecimalField(max_digits=10, decimal_places=4)
     TotalAmount = forms.DecimalField(max_digits=10, decimal_places=4)
 
     class Meta:
         model = ProductionReceipt
-        fields = ['ReceiptNumber', 'TotalAmount','OrderNumber']
+        fields = ['ReceiptNumber', 'TotalAmount','TotalQty']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -114,7 +116,7 @@ class ProductionReceiptForm(forms.ModelForm):
 class ProductionReceiptItemInline(admin.TabularInline):
     model = ProductionReceiptItem
     extra = 1
-    fields = ('ProductionNo','ReceiptNumber', 'ItemName','Size', 'Color' ,'Quantity','Price', 'PriceTotal')
+    fields = ('ProductionNo','ReceiptNumber','ItemCode', 'ItemName','Size', 'Color' ,'Quantity','Price', 'PriceTotal')
 
 class ProductionReceiptAdmin(admin.ModelAdmin):
     inlines = [ProductionReceiptItemInline]

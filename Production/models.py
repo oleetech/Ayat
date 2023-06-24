@@ -39,6 +39,7 @@ class ChildComponent(models.Model):
                                                                                                                
 '''
 class Production(models.Model):
+    code = models.CharField(max_length=20,default='')    
     name = models.CharField(max_length=100)
     quantity = models.DecimalField(max_digits=10, decimal_places=4)
     sales_order_no = models.ForeignKey(SalesOrderInfo,on_delete=models.CASCADE,related_name='sales_production_order',default=1)
@@ -79,8 +80,9 @@ class ProductionComponent(models.Model):
 
 class ProductionReceipt(models.Model):
     ReceiptNumber = models.PositiveIntegerField(default=1, unique=True)
-    OrderNumber = models.ForeignKey(SalesOrderInfo, on_delete=models.CASCADE, null=True, default=None)
     TotalAmount = models.DecimalField(max_digits=10, decimal_places=4, null=True, blank=True,default=0)
+    TotalQty = models.DecimalField(max_digits=10, decimal_places=4, null=True, blank=True,default=0)  
+
     def __str__(self):
         return f"ReceiptNo{self.ReceiptNumber}"
 
@@ -91,6 +93,7 @@ class ProductionReceiptItem(models.Model):
     ReceiptNumber = models.ForeignKey(ProductionReceipt, on_delete=models.CASCADE, null=True, default=None)
     SalesOrderItem = models.ForeignKey(SalesOrderItem, on_delete=models.CASCADE, null=True, default=None)
     ProductionNo = models.ForeignKey(Production, on_delete=models.CASCADE, related_name='production_receipt_components', null=True)
+    ItemCode = models.CharField(max_length=50,default='')
     ItemName = models.CharField(max_length=50)
     Quantity = models.PositiveIntegerField(default=0)
     Price = models.DecimalField(max_digits=10, decimal_places=4)

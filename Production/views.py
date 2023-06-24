@@ -1,7 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import BillOfMaterials
+from .models import BillOfMaterials,Production
 @csrf_exempt
 def ajax_view(request):
     if request.method == 'POST':
@@ -33,3 +33,18 @@ def ajax_view(request):
 
     return JsonResponse([], safe=False)
 # Create your views here.
+@csrf_exempt
+def receipt_production_productionno(request):
+    if request.method == 'POST':
+        production_no = request.POST.get('ProductionNo')
+        production = get_object_or_404(Production, docno=production_no)
+        
+        response = {
+            'code': production.code,
+            'name': production.name,
+            'quantity': str(production.quantity)  # Convert quantity to a string if needed
+        }
+        return JsonResponse(response)
+    else:
+        # Handle GET requests if needed
+        pass
